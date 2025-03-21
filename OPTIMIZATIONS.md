@@ -8,7 +8,7 @@ If the winner claims the prize before the owner claims their share `prizePool.to
 
 ## Optimizations
 
-Tried out a few different gas-optimizatioons and I was able to get an overall 3% reduction in `mint` cost by changing the randomness generation from the keccack256 implementation in `Utilities.sol` to bit manipulation of the seed, although for the 5th mint there was negligible reduction (<1%).
+Tried out a few different gas-optimizatioons and I was able to get an overall 3% reduction in `mint` cost by changing the randomness generation from the keccack256 implementation in `Utilities.sol` to bit manipulation of the seed, although for the 5th mint there was negligible reduction (<1%). Storage optimizations in structs led to additional gas savings, such as a 7% reduction in cost to check the winning token.
 
 Full report of test of gas optimization is [here](mint-gas-report.txt).
 
@@ -18,13 +18,10 @@ Below are all the changes made to `ArrowsOptimized.sol`.
 
 - Removed `totalPrizePool` as it was redundant with `prizePool.totalDeposited`
 - moved `ownerWithdrawn` tracking into `prizePool.totalWithdrawn` for better gas efficiency and code organization, while maintaining the same withdrawal limit functionality
-- Moved `winnerPercentage` to be a public state variable instead of in a struct since it's frequently accessed in prize distribution calculations, and can be packed with other values
-  - updated constructor and `updateWinnerPercentage` to account for this change
-- **variable packing:**
-  - packed `mintLimit` and `winnerPercentage` into single slot
-  - updated `lastWinnerClaim` timestamp to `uint32` which still provides coverage until 2106
-    - modify castings for timestamps in `updateWinnerPercentage()` and `claimPrize()` to work with that change
-- Added getter functions for struct fields to maintain proper access patterns
+- updated `lastWinnerClaim` timestamp to `uint32` which still provides coverage until 2106
+- removed redundant `winnerPercentage`, updated to `uint8` and packed variables in PrizePool struct
+  - modify castings for timestamps in `updateWinnerPercentage()` and `claimPrize()` to work with that change
+  - Added public getter function for `PrizePool.winnerPercentage` for access control
 
 ```solidity
 function getTotalDeposited() public view returns (uint256)
@@ -77,5 +74,6 @@ Fixed the failing tests for `testEmergencyWithdraw` and `testWithdrawOwnerShare`
 - init with proper owner (`vm.addr(1)`) instead of the contract itself
 - check balance against `_owner.balance` instead of `address(this).balance` in `testWithdrawOwnerShare()` and properly deconstruct the `prizePool` when checking for the owner's share
 - remove redundant ownership transfer in `testEmergencyWithdraw()` since owner was set previously
+- Updated `Arrows.sol` with a getter function for winner percentage
 
 Tests are now passing.

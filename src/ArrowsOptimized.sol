@@ -27,8 +27,6 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
     event TokenBurned(uint256 indexed tokenId, address indexed burner);
 
     uint8 public mintLimit = 10;
-    uint8 public winnerPercentage = 60; // Default 60% for winner
-    // uint8 private _reserved; // if needed you have another storage slot here you could user, otherwise just delete
     uint256 public constant MAX_COMPOSITE_LEVEL = 5;
     uint256 public mintPrice = 0.001 ether;
     uint256 public tokenMintId = 0;
@@ -38,9 +36,10 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
 
     // Prize pool state
     struct PrizePool {
+        uint8 winnerPercentage; // Percentage for winner (1-99)
+        uint32 lastWinnerClaim; // Timestamp of last winner claim
         uint256 totalDeposited; // Total ETH ever deposited
         uint256 totalWithdrawn; // Total ETH withdrawn by owner
-        uint32 lastWinnerClaim; // Timestamp of last winner claim
     }
 
     PrizePool public prizePool;
@@ -57,6 +56,12 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
         return prizePool.totalWithdrawn;
     }
 
+    /// @notice Get the winner percentage from the prize pool
+    /// @return The winner percentage
+    function winnerPercentage() public view returns (uint8) {
+        return prizePool.winnerPercentage;
+    }
+
     // Store token metadata directly instead of using epochs
     struct TokenMetadata {
         uint256 seed; // The final seed used for randomization
@@ -70,7 +75,7 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
     constructor() Ownable() {
         _arrowsData.minted = 0;
         _arrowsData.burned = 0;
-        winnerPercentage = 60; // Default 60% for winner
+        prizePool.winnerPercentage = 60; // Default 60% for winner
         prizePool.lastWinnerClaim = 0;
     }
 
@@ -94,7 +99,7 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
     function updateWinnerPercentage(uint8 newPercentage) external onlyOwner {
         require(newPercentage > 0 && newPercentage < 100, "Invalid percentage");
         require(block.timestamp >= uint256(prizePool.lastWinnerClaim) + 1 days, "Too soon after winner claim");
-        winnerPercentage = newPercentage;
+        prizePool.winnerPercentage = newPercentage;
         emit WinnerPercentageUpdated(newPercentage);
     }
 
@@ -352,7 +357,7 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
     /// @return The owner's share based on total deposits and winner percentage
     function getOwnerShare() public view returns (uint256) {
         unchecked {
-            return (prizePool.totalDeposited * (100 - winnerPercentage)) / 100;
+            return (prizePool.totalDeposited * (100 - prizePool.winnerPercentage)) / 100;
         }
     }
 
@@ -360,7 +365,7 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
     /// @return The winner's share based on total deposits and winner percentage
     function getWinnerShare() public view returns (uint256) {
         unchecked {
-            return (prizePool.totalDeposited * winnerPercentage) / 100;
+            return (prizePool.totalDeposited * prizePool.winnerPercentage) / 100;
         }
     }
 
