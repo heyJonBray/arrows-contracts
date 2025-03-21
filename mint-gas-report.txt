@@ -1,0 +1,72 @@
+Compiling 2 files with Solc 0.8.20
+Solc 0.8.20 finished in 24.31s
+Compiler run successful!
+
+Ran 1 test for test/ArrowsMintGasComparison.t.sol:ArrowsMintGasComparisonTest
+[PASS] testMintGasComparison() (gas: 14911224)
+Logs:
+
+
+
+
+
+  === SUMMARY ===
+  === MINT GAS OPTIMIZATION REPORT ===
+  ARROWS MINT GAS COMPARISON REPORT
+==================================
+
+Configuration:
+- Batch Size: 8 tokens
+- Number of Mints: 5
+
+Detailed Results:
+Mint #1:
+- Original:  1486442 gas
+- Optimized: 1438909 gas
+- Savings:   47533 gas (3%)
+- Per Token Original:  185805 gas
+- Per Token Optimized: 179863 gas
+
+Mint #2:
+- Original:  1432392 gas
+- Optimized: 1406997 gas
+- Savings:   25395 gas (1%)
+- Per Token Original:  179049 gas
+- Per Token Optimized: 175874 gas
+
+Mint #3:
+- Original:  1472322 gas
+- Optimized: 1387057 gas
+- Savings:   85265 gas (5%)
+- Per Token Original:  184040 gas
+- Per Token Optimized: 173382 gas
+
+Mint #4:
+- Original:  1512101 gas
+- Optimized: 1426973 gas
+- Savings:   85128 gas (5%)
+- Per Token Original:  189012 gas
+- Per Token Optimized: 178371 gas
+
+Mint #5:
+- Original:  1452412 gas
+- Optimized: 1446973 gas
+- Savings:   5439 gas (0%)
+- Per Token Original:  181551 gas
+- Per Token Optimized: 180871 gas
+
+Summary:
+- Total Gas (Original):  7355669 gas
+- Total Gas (Optimized): 7106909 gas
+- Total Savings:         248760 gas (3%)
+- Average Gas Per Mint (Original):  1471133 gas
+- Average Gas Per Mint (Optimized): 1421381 gas
+- Average Gas Per Token (Original):  183891 gas
+- Average Gas Per Token (Optimized): 177672 gas
+
+
+  === END OF REPORT ===
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 2.55ms (1.49ms CPU time)
+
+Ran 1 test suite in 3.13ms (2.25ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)

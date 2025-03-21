@@ -1,0 +1,53 @@
+No files changed, compilation skipped
+
+Ran 1 test for test/ArrowsRandomnessSimulation.t.sol:ArrowsRandomnessSimulationTest
+[PASS] testRandomnessDistributions() (gas: 4022911)
+Logs:
+  0 | B:3 G:0 | B:4 G:0 | diff
+  1 | B:5 G:5 | B:1 G:0 | diff
+  2 | B:2 G:0 | B:1 G:0 | diff
+  3 | B:4 G:0 | B:0 G:0 | diff
+  4 | B:4 G:0 | B:0 G:0 | diff
+  5 | B:5 G:0 | B:0 G:0 | diff
+  6 | B:3 G:0 | B:3 G:3 | diff
+  7 | B:1 G:6 | B:0 G:0 | diff
+  8 | B:3 G:0 | B:0 G:0 | diff
+  9 | B:1 G:4 | B:1 G:0 | diff
+  10 | B:5 G:0 | B:1 G:5 | diff
+  11 | B:0 G:0 | B:1 G:0 | diff
+  12 | B:1 G:0 | B:1 G:0 | match
+  13 | B:6 G:0 | B:6 G:0 | match
+  14 | B:0 G:3 | B:0 G:0 | diff
+  15 | B:0 G:1 | B:3 G:0 | diff
+  16 | B:1 G:0 | B:4 G:0 | diff
+  17 | B:2 G:0 | B:1 G:5 | diff
+  18 | B:0 G:0 | B:1 G:3 | diff
+  19 | B:0 G:1 | B:1 G:0 | diff
+  
+Color Band Distribution:
+  Band | Original | Current Opt
+  -----|----------|-------------
+    0 | 32.50% | 34.60%
+    1 | 31.80% | 34.10%
+    2 | 18.30% | 16.20%
+    3 | 8.90% | 6.50%
+    4 | 4.70% | 4.80%
+    5 | 2.60% | 2.40%
+    6 | 1.20% | 1.40%
+  
+Gradient Distribution:
+  Grad | Original | Current Opt
+  -----|----------|-------------
+    0 | 79.50% | 79.20%
+    1 | 4.90% | 5.0%
+    2 | 3.40% | 3.90%
+    3 | 3.30% | 3.30%
+    4 | 3.20% | 2.80%
+    5 | 2.90% | 2.70%
+    6 | 2.80% | 3.10%
+  
+Match Rate: 18% (188 out of 1000)
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 21.48ms (20.99ms CPU time)
+
+Ran 1 test suite in 22.83ms (21.48ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)

@@ -2,15 +2,15 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../src/Arrows.sol";
+import "../src/ArrowsOptimized.sol";
 
 /**
- * @title Arrows Test
- * @dev Test contract for Arrows contract. This test suite covers all core functionality
+ * @title ArrowsOptimized Test
+ * @dev Test contract for ArrowsOptimized contract. This test suite covers all core functionality
  *      including minting, compositing, prize pool management, and admin functions.
  */
-contract ArrowsTest is Test {
-    Arrows _arrows;
+contract ArrowsOptimizedTest is Test {
+    ArrowsOptimized _arrows;
     address _owner;
     address _user1;
     address _user2;
@@ -20,15 +20,18 @@ contract ArrowsTest is Test {
     uint256 _mintLimit = 10;
     uint256 _winnerPercentage = 60;
 
+    // Add receive function to accept ETH
+    receive() external payable {}
+
     function setUp() public {
-        _owner = vm.addr(1);
+        _owner = vm.addr(1); // Use a separate address for owner
         _user1 = vm.addr(2);
         _user2 = vm.addr(3);
         _user3 = vm.addr(4);
 
         // Deploy the Arrows contract as the owner
         vm.startPrank(_owner);
-        _arrows = new Arrows();
+        _arrows = new ArrowsOptimized();
         vm.stopPrank();
 
         // Log addresses
@@ -43,8 +46,8 @@ contract ArrowsTest is Test {
         assertEq(_arrows.mintPrice(), _mintPrice, "Initial mint price should be 0.001 ether");
         assertEq(_arrows.winnerPercentage(), _winnerPercentage, "Initial winner percentage should be 60");
         assertEq(_arrows.tokenMintId(), 0, "Initial token mint ID should be 0");
-        assertEq(_arrows.totalPrizePool(), 0, "Initial prize pool should be 0");
-        assertEq(_arrows.ownerWithdrawn(), 0, "Initial owner withdrawn should be 0");
+        assertEq(_arrows.getTotalDeposited(), 0, "Initial prize pool should be 0");
+        assertEq(_arrows.getTotalWithdrawn(), 0, "Initial owner withdrawn should be 0");
     }
 
     function testMint() public {
@@ -57,7 +60,7 @@ contract ArrowsTest is Test {
 
         assertEq(finalBalance - initialBalance, _mintLimit, "User should receive correct number of tokens");
         assertEq(_arrows.tokenMintId(), _mintLimit, "Token mint ID should be updated");
-        assertEq(_arrows.totalPrizePool(), _mintPrice * _mintLimit, "Prize pool should be updated");
+        assertEq(_arrows.getTotalDeposited(), _mintPrice * _mintLimit, "Prize pool should be updated");
 
         vm.stopPrank();
     }
@@ -168,7 +171,7 @@ contract ArrowsTest is Test {
         _arrows.mint{value: _mintPrice * _mintLimit}(_user1);
         vm.stopPrank();
 
-        uint256 initialPrizePool = _arrows.totalPrizePool();
+        uint256 initialPrizePool = _arrows.getTotalDeposited();
         uint256 ownerShare = _arrows.getOwnerShare();
         uint256 winnerShare = _arrows.getWinnerShare();
 
@@ -184,8 +187,7 @@ contract ArrowsTest is Test {
         _arrows.mint{value: _mintPrice * _mintLimit}(_user1);
         vm.stopPrank();
 
-        // Ensure owner has enough balance to receive ETH
-        vm.deal(_owner, 0);
+        // Get initial balances
         uint256 initialOwnerBalance = _owner.balance;
         uint256 ownerShare = _arrows.getOwnerShare();
 
@@ -194,8 +196,7 @@ contract ArrowsTest is Test {
         vm.stopPrank();
 
         assertEq(_owner.balance, initialOwnerBalance + ownerShare, "Owner should receive their share");
-        (, uint256 totalWithdrawn,,) = _arrows.prizePool();
-        assertEq(totalWithdrawn, ownerShare, "Owner withdrawn amount should be updated");
+        assertEq(_arrows.getTotalWithdrawn(), ownerShare, "Owner withdrawn amount should be updated");
     }
 
     function testEmergencyWithdraw() public {
@@ -210,6 +211,8 @@ contract ArrowsTest is Test {
 
         // Get initial owner balance
         uint256 initialOwnerBalance = _owner.balance;
+
+        // No need to transfer ownership since _owner is already the owner
 
         // Perform emergency withdrawal
         vm.startPrank(_owner);
