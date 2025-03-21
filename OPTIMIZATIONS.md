@@ -19,7 +19,7 @@ Below are all the changes made to `ArrowsOptimized.sol`.
 - Removed `totalPrizePool` as it was redundant with `prizePool.totalDeposited`
 - moved `ownerWithdrawn` tracking into `prizePool.totalWithdrawn` for better gas efficiency and code organization, while maintaining the same withdrawal limit functionality
 - updated `lastWinnerClaim` timestamp to `uint32` which still provides coverage until 2106
-- removed redundant `winnerPercentage`, updated to `uint8` and packed variables in PrizePool struct
+- put `winnerPercentage` only in PrizePool, updated to `uint8` and packed variables in PrizePool struct
   - modify castings for timestamps in `updateWinnerPercentage()` and `claimPrize()` to work with that change
   - Added public getter function for `PrizePool.winnerPercentage` for access control
 

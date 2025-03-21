@@ -31,7 +31,6 @@ contract Arrows is IArrows, ARROWS721, Ownable {
     uint256 public tokenMintId = 0;
     uint256 public constant MAX_COMPOSITE_LEVEL = 5;
     uint256 public totalPrizePool;
-    uint8 public winnerPercentage = 60; // Default 60% for winner
     uint256 public ownerWithdrawn; // Track how much the owner has withdrawn
 
     /// @dev We use this database for persistent storage.
@@ -349,6 +348,12 @@ contract Arrows is IArrows, ARROWS721, Ownable {
         unchecked {
             return (prizePool.totalDeposited * prizePool.winnerPercentage) / 100;
         }
+    }
+
+    /// @notice Get the winner percentage from the prize pool
+    /// @return The winner percentage
+    function winnerPercentage() public view returns (uint8) {
+        return uint8(prizePool.winnerPercentage);
     }
 
     /// @notice Calculate the available amount for owner withdrawal
