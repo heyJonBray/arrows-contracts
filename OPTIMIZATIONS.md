@@ -74,6 +74,6 @@ Fixed the failing tests for `testEmergencyWithdraw` and `testWithdrawOwnerShare`
 - init with proper owner (`vm.addr(1)`) instead of the contract itself
 - check balance against `_owner.balance` instead of `address(this).balance` in `testWithdrawOwnerShare()` and properly deconstruct the `prizePool` when checking for the owner's share
 - remove redundant ownership transfer in `testEmergencyWithdraw()` since owner was set previously
-- Updated `Arrows.sol` with a getter function for winner percentage
+- Updated `Arrows.sol` to properly set winnerPercentage in PrizePool struct and added getter function
 
 Tests are now passing.
