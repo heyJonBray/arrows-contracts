@@ -1,18 +1,18 @@
 # Arrows Contract Optimizations and Fixes
 
-I made changes to a modified `ArrowsOptimized.sol` contract to preserve the original. I was able to get 3% gas reduction on mint with almost no change to the resulting distrubition. Don't feel obligated to implement the optimization if the resulting distrubition isn't favorable, at the end of the day this was a fun gas golf session lol
+I made changes to a modified [`ArrowsOptimized.sol`](src/ArrowsOptimized.sol) contract to preserve the original. I was able to get 3% gas reduction on mint with almost no change to the resulting distrubition. Don't feel obligated to implement the optimization if the resulting distrubition isn't favorable, at the end of the day this was a fun gas golf session lol
 
-## Possible Acounting Issue
+## Acounting Loophole
 
-If the winner claims the prize before the owner claims their share, `prizePool.totalDeposited` is reduced to what's left in the pool, and the owner's share is calculated as 40% of that. Owner can still use `emergencyWithdraw()` but if the game continues indefinitely, you may want to update the `claimPrize()` logic to pay the owner out before resetting `prizePool.totalDeposited` so that in the event the game continues, accounting is up to date.
+If the winner claims the prize before the owner claims their share `prizePool.totalDeposited` is reduced to what's left in the pool, and the owner's share is calculated as 40% of that. Owner can still use `emergencyWithdraw()` but if you want the game to continue indefinitely, you may want to update the `claimPrize()` logic to pay the owner out before resetting deposits so that in the event the game continues, accounting is up to date.
 
 ## Optimizations
 
-Tried out a few different gas-optimizatioons and I was able to get an overall 3% reduction in `mint` cost by changing the randomness generation from the keccack256 implementation in `Utilities.sol` to bit manipulation of the seed, although for the 5th mint there was negligible reduction.
+Tried out a few different gas-optimizatioons and I was able to get an overall 3% reduction in `mint` cost by changing the randomness generation from the keccack256 implementation in `Utilities.sol` to bit manipulation of the seed, although for the 5th mint there was negligible reduction (<1%).
 
 Full report of test of gas optimization is [here](mint-gas-report.txt).
 
-Below are all the changes that were made in `ArrowsOptimized.sol`.
+Below are all the changes made to `ArrowsOptimized.sol`.
 
 ## State Variables
 
@@ -42,7 +42,7 @@ Originally tried improving efficiency by pre-incrementing `tokenMintId` and batc
 
 ### `_generateTokenRandomness()`
 
-replaced Utilities hash with bit manipulation for gas efficiency, and it avoids a library call which helps a little. The result produces slightly different outputs given the same seed, but is scaled match the original color and gradient distributions. There is a slight skew over the 1000 test mints in some of the color bands which you can see below.
+replaced Utilities hash with bit manipulation for gas efficiency, and it avoids a library call which helps a little. The result produces different outputs given the same seed, but is scaled match the original color and gradient distributions. There is a slight skew over a large amount of test mints in some of the color bands which you can see below.
 
 > Ran a simulation of 1000 mints to get the distribution of color bands and gradients between the original and optimized versions here: [`randomness-simulation.txt`](randomness-simulation.txt). This was generated from `ArrowsRandomnessSimulation.t.sol`.
 

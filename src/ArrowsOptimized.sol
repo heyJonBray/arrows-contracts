@@ -109,8 +109,8 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
         _tokenMetadata[tokenId].seed = seed;
 
         // Extract non-contiguous bytes to reduce correlation
-        uint8 n1 = uint8(seed & 0xFF); // Byte 0
-        uint8 n2 = uint8((seed >> 56) & 0xFF); // Byte 7
+        uint8 n1 = uint8(seed & 0xFF); // byte 0
+        uint8 n2 = uint8((seed >> 56) & 0xFF); // byte 7
 
         // Scale to maintain original rarity distributions
         uint8 scaledN1 = uint8((uint256(n1) * 120) / 255);
