@@ -58,7 +58,7 @@ contract ArrowsOptimized is IArrows, ARROWS721, Ownable {
 
     /// @notice Get the winner percentage from the prize pool
     /// @return The winner percentage
-    function winnerPercentage() public view returns (uint8) {
+    function getWinnerPercentage() public view returns (uint8) {
         return prizePool.winnerPercentage;
     }
 

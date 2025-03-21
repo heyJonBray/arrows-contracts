@@ -21,11 +21,12 @@ Below are all the changes made to `ArrowsOptimized.sol`.
 - updated `lastWinnerClaim` timestamp to `uint32` which still provides coverage until 2106
 - put `winnerPercentage` only in PrizePool, updated to `uint8` and packed variables in PrizePool struct
   - modify castings for timestamps in `updateWinnerPercentage()` and `claimPrize()` to work with that change
-  - Added public getter function for `PrizePool.winnerPercentage` for access control
+- Added public getter function for PrizePool struct variables for proper access control
 
 ```solidity
 function getTotalDeposited() public view returns (uint256)
 function getTotalWithdrawn() public view returns (uint256)
+function getWinnerPercentage() public view returns (uint8)
 ```
 
 ## Gas Optimizations

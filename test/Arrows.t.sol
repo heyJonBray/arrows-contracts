@@ -41,7 +41,7 @@ contract ArrowsTest is Test {
     function testInitialState() public {
         assertEq(_arrows.mintLimit(), _mintLimit, "Initial mint limit should be 10");
         assertEq(_arrows.mintPrice(), _mintPrice, "Initial mint price should be 0.001 ether");
-        assertEq(_arrows.winnerPercentage(), _winnerPercentage, "Initial winner percentage should be 60");
+        assertEq(_arrows.getWinnerPercentage(), _winnerPercentage, "Initial winner percentage should be 60");
         assertEq(_arrows.tokenMintId(), 0, "Initial token mint ID should be 0");
         assertEq(_arrows.totalPrizePool(), 0, "Initial prize pool should be 0");
         assertEq(_arrows.ownerWithdrawn(), 0, "Initial owner withdrawn should be 0");
@@ -150,7 +150,7 @@ contract ArrowsTest is Test {
         _arrows.updateWinnerPercentage(newPercentage);
         vm.stopPrank();
 
-        assertEq(_arrows.winnerPercentage(), newPercentage, "Winner percentage should be updated");
+        assertEq(_arrows.getWinnerPercentage(), newPercentage, "Winner percentage should be updated");
     }
 
     function testUpdateWinnerPercentageInvalid() public {
